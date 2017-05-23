@@ -1,0 +1,11 @@
+[{
+  "from": "user1@example.com",
+  "to": "user2@example.com",
+  "message": "Welcome here!",
+  "name": "welcome"
+}, {
+  "from": "user1@example.com",
+  "to": "user2@example.com",
+  "message": "Hello {{data.name}}!",
+  "name": "hello"
+}]

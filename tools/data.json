@@ -1,0 +1,17 @@
+{
+  "emailtemplates": {
+    "_model": "EmailTemplate",
+    "0": {
+      "name": "identity_password_forgotten",
+      "message": "Here is the token to be used to reset the password: {{data.token}}",
+      "to": "{{data.identity.email}}",
+      "subject": "Password Reset"
+    },
+    "1": {
+      "name": "identity_confirm",
+      "message": "Here is the token to be used to confirm your subscription: {{data.identity._id}}{{data.token}}",
+      "to": "{{data.identity.email}}",
+      "subject": "Confirm your subscription"
+    }
+  }
+}

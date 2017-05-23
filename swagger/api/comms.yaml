@@ -1,0 +1,163 @@
+swagger: '2.0'
+info:
+  version: '0.1'
+  title: ASC Communication API
+  description: "These are the communication API for the ASC message system, event notifications, send emails."
+host: api.asc.com
+basePath: /v1
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  '/email/templates':
+    get:
+      description: List all email templates
+      responses:
+        '200':
+          description: List of email templates
+          schema:
+            type: array
+            items:
+              $ref: ../models/email_template.yaml
+        default:
+          description: An error occurred
+          schema:
+            $ref: ../models/errors.yaml
+      security:
+        - jwt:
+          - admins
+    post:
+      description: Declares and creates a new email template
+      parameters:
+        - name: _email_template
+          in: body
+          description: Email template details
+          required: true
+          schema:
+            $ref: ../models/email_template.yaml
+      responses:
+        '201':
+          description: Creation successful
+          headers:
+             location:
+               type: string
+          schema:
+              $ref: ../models/email_template.yaml
+        default:
+          description: An error occurred
+          schema:
+            $ref: ../models/errors.yaml
+      security:
+        - jwt:
+          - admins
+  '/email/templates/{id}':
+    get:
+      description: Retrieves an email template by ID
+      parameters:
+        - name: id
+          in: path
+          description: ID of the email template to get
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Details of the email template by ID
+          schema:
+            $ref: ../models/email_template.yaml
+        default:
+          description: An error occurred
+          schema:
+            $ref: ../models/errors.yaml
+      security:
+        - jwt:
+          - admins
+    put:
+      description: Updates an existing email template
+      parameters:
+        - name: id
+          in: path
+          description: ID of the email template to update
+          required: true
+          type: string
+        - name: _email template
+          in: body
+          description: Details of the email template to update
+          required: true
+          schema:
+            $ref: ../models/email_template.yaml
+      responses:
+        '200':
+          description: Update successful
+          schema:
+            $ref: ../models/email_template.yaml
+        default:
+          description: An error occurred
+          schema:
+            $ref: ../models/errors.yaml
+      security:
+        - jwt:
+          - admins
+    delete:
+      description: Removes an existing email template
+      parameters:
+        - name: id
+          in: path
+          description: ID of the email template to delete
+          required: true
+          type: string
+      responses:
+        '204':
+          description: Delete successful
+          schema:
+            type: string
+        default:
+          description: An error occurred
+          schema:
+            $ref: ../models/errors.yaml
+      security:
+        - jwt:
+          - admins
+  '/email':
+    post:
+      description: Post an email
+      parameters:
+        - name: _email template
+          in: body
+          description: Details of the email template
+          required: true
+          schema:
+            $ref: ../forms/email_post.yaml
+      responses:
+        '202':
+          description: Email has been sent
+          schema:
+            type: string
+        default:
+          description: An error occurred
+          schema:
+            $ref: ../models/errors.yaml
+      security:
+        - jwt:
+          - admins
+          - users
+          - internal_ms
+securityDefinitions:
+  jwt:
+    description: "Identity token"
+    type: "oauth2"
+    flow: "implicit"
+    authorizationUrl: "/v1/identities/login/basic"
+    scopes:
+      owner: Owner scope
+      admins: Administrators scope
+      users: Regular users scope
+      premium_users: Premium users scope
+      internal_ms: Internal microservices scope
+    x-authorize-owner:
+      identityID : _id
+definitions:
+  EmailTemplate:
+    $ref: ../models/email_template.yaml

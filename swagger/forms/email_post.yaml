@@ -1,0 +1,49 @@
+type: object
+properties:
+  from:
+    description: the sender email address
+    type: string
+    format: email
+  to:
+    description: the receiver email address
+    type: string
+    format: email
+  subject:
+    description: Email subject
+    type: string
+    minLength: 1
+    maxLength: 2048
+  message:
+    description: Email body
+    type: string
+    minLength: 1
+    maxLength: 1024000
+  messageType:
+    description: Email type
+    type: string
+    enum:
+      - text
+      - html
+    default: text
+  attachments:
+    type: array
+    description: Email attachments
+    items:
+      type: object
+      required:
+        - path
+      properties:
+        path:
+          description: data uri attachment
+          type: string
+          # data-uri scheme
+          # data:[<media type>][;charset=<character set>][;base64],<data>
+          pattern: '^(data:)([\w\/\+]+);(charset=[\w-]+|base64).*,(.*)'
+          minLength: 15
+          maxLength: 15000000
+  templateName:
+    description: A template name to use to render the email
+    type: string
+  templateData:
+    description: JSON Object to use for email rendering
+    # it should not be validated, so no type here
